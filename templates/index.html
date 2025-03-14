@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escáner de QR</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        #qr-reader {
+            display: none;
+            margin: auto;
+            width: 300px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Escáner de QR</h1>
+
+    <button id="scan-btn">Escanear</button>
+    <div id="qr-reader"></div>
+
+    <div id="result"></div>
+
+    <script>
+        const scanBtn = document.getElementById('scan-btn');
+        const qrReader = document.getElementById('qr-reader');
+        const resultDiv = document.getElementById('result');
+
+        scanBtn.addEventListener('click', function() {
+            scanBtn.style.display = 'none';
+            qrReader.style.display = 'block';
+
+            const html5QrCode = new Html5Qrcode("qr-reader");
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                { fps: 10, qrbox: 250 },
+                (decodedText) => {
+                    html5QrCode.stop();
+                    qrReader.style.display = 'none';
+                    scanBtn.style.display = 'block';
+                    resultDiv.innerHTML = `<p>URL: <a href="${decodedText}" target="_blank">${decodedText}</a></p>`;
+                },
+                (errorMessage) => {}
+            ).catch(err => console.error(err));
+        });
+    </script>
+
+</body>
+</html>
